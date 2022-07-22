@@ -24,7 +24,7 @@ objectname=${vargx[1]}
 # Recursive function to get ownerReferenceObject for namespaced objects
 get-owner-ref-ns()
 {
-	if [ "${BASH_VERSINFO:-0}" -ge 4 ]
+    if [ "${BASH_VERSINFO:-0}" -ge 4 ]
     then
         readarray -t morefs < <(kubectl get -n $3 $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
     else
@@ -53,7 +53,7 @@ get-owner-ref-ns()
 # Recursive function to get ownerReferenceObject for non-namespaced objects
 get-owner-ref()
 {
-	if [ "${BASH_VERSINFO:-0}" -ge 4 ]
+    if [ "${BASH_VERSINFO:-0}" -ge 4 ]
     then
         readarray -t morefs < <(kubectl get $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
     else
