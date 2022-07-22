@@ -24,7 +24,12 @@ objectname=${vargx[1]}
 # Recursive function to get ownerReferenceObject for namespaced objects
 get-owner-ref-ns()
 {
-	readarray -t morefs < <(kubectl get -n $3 $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+	if [ "${BASH_VERSINFO:-0}" -ge 4 ]
+    then
+        readarray -t morefs < <(kubectl get -n $3 $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+    else
+        IFS=$'\n' read -d '' -ra morefs < <(kubectl get -n $3 $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+    fi
 
 	if [ ${#morefs[@]} -ne 0 ]
 	then
@@ -48,7 +53,12 @@ get-owner-ref-ns()
 # Recursive function to get ownerReferenceObject for non-namespaced objects
 get-owner-ref()
 {
-	readarray -t morefs < <(kubectl get $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+	if [ "${BASH_VERSINFO:-0}" -ge 4 ]
+    then
+        readarray -t morefs < <(kubectl get $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+    else
+        IFS=$'\n' read -d '' -ra morefs < <(kubectl get $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+    fi
 
 	if [ ${#morefs[@]} -ne 0 ]
 	then
