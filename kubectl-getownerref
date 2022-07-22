@@ -1,0 +1,79 @@
+#!/bin/bash
+
+##### Options handling Code contributed by Orf
+while [[ $# > 0 ]]
+do
+	case "$1" in
+    	-n)
+      		varg1=${2}
+      		shift
+      		;;
+    	*)
+      		vargx[i]="$1"
+      		((i=i+1))
+      		;;
+  	esac
+  	shift
+done
+
+namespace=$varg1
+objectkind=${vargx[0]}
+objectname=${vargx[1]}
+##### End Options handling Code contributed by Orf
+
+# Recursive function to get ownerReferenceObject for namespaced objects
+get-owner-ref-ns()
+{
+	readarray -t morefs < <(kubectl get -n $3 $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+
+	if [ ${#morefs[@]} -ne 0 ]
+	then
+
+		IFS=$'\n' #read til newline
+		for moref in ${morefs[@]}
+		do
+    			kind=$(jq -r '.kind' <<< "${moref}")
+    			name=$(jq -r '.name' <<< "${moref}")
+	    		apid=$(jq -r '.apiVersion' <<< "${moref}")
+			printf "%s/%s == Is Owned by == %s/%s\n" $1 $2 $kind $name
+
+			get-owner-ref-ns $kind $name $3
+		done
+		unset IFS
+	else
+		printf "\n"
+	fi
+}
+
+# Recursive function to get ownerReferenceObject for non-namespaced objects
+get-owner-ref()
+{
+	readarray -t morefs < <(kubectl get $1 $2 -o json |jq -c '.metadata| select(.ownerReferences != null) | .ownerReferences[]')
+
+	if [ ${#morefs[@]} -ne 0 ]
+	then
+
+		IFS=$'\n' #read til newline
+		for moref in ${morefs[@]}
+		do
+    			kind=$(jq -r '.kind' <<< "${moref}")
+    			name=$(jq -r '.name' <<< "${moref}")
+	    		apid=$(jq -r '.apiVersion' <<< "${moref}")
+			printf "%s/%s == Is Owned by == %s/%s\n" $1 $2 $kind $name
+
+			get-owner-ref $kind $name
+		done
+		unset IFS
+	else
+		printf "\n"
+	fi
+}
+
+# Main script called here. 
+echo
+if [ $namespace ]
+then
+	get-owner-ref-ns $objectkind $objectname $namespace
+else
+	get-owner-ref $objectkind $objectname
+fi
