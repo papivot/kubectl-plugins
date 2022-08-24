@@ -27,7 +27,7 @@ then
 	then
 		for POD in $(kubectl get pods -n ${NAMESPACE} -oname)
 		do
-			kubectl logs -n ${NAMESPACE} ${POD} --prefix --since=${AGEINSEC} --all-containers -f > $TTY &
+			kubectl logs -n ${NAMESPACE} ${POD} --prefix --since=${AGEINSEC} --all-containers -f > ${TTY} &
 		done
 	else
 		echo "Error. Required namespace not specified."
