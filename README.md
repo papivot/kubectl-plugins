@@ -12,6 +12,10 @@ To run this plugin execute -
 ```
 kubectl nslogs -n namespace [ SINCE - only return logs newer than a relative duration like 5s, 2m, or 3h. Without any values, defaults to all logs ]
 ```
+E.g.
+```
+kubectl nslogs -n kube-system 5s
+```
 
 CTRL+C to STOP/terminate. 
 
