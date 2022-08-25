@@ -13,6 +13,10 @@ To run this plugin execute -
 kubectl nslogs -n namespace [ SINCE - only return logs newer than a relative duration like 5s, 2m, or 3h. Without any values, defaults to all logs ]
 ```
 
+CTRL+C to STOP/terminate. 
+
+Verified to work on MacOS and Linux. 
+
 ---
 ## KUBECTL plugin to dump ownerReferenceObjects 
 
