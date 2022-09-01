@@ -1,6 +1,6 @@
 # Sample Kubectl plugins
 
-## KUBECTL plugin to dump all container logs from a given namespace
+## nslogs - KUBECTL plugin to dump all container logs from a given namespace
 
 If you need to look at ALL the container logs from a namespace, currently, there isn’t an option (that I am aware of) to do so with kubectl today. This simple kubectl plugin solves the issue by dumping the logs from all the pods/containers in a given namespace. Useful for troubleshooting apps and cluster issues that may have multiple labels or deployment files (no common attributes, like pods within kube-system) but all reside in the same namespace.
 
@@ -22,7 +22,7 @@ CTRL+C to STOP/terminate.
 Verified to work on MacOS and Linux. 
 
 ---
-## KUBECTL plugin to dump ownerReferenceObjects 
+## getownerref - KUBECTL plugin to dump ownerReferenceObjects 
 
 This simple kubectl plugin does a recursive walkthru of a given Kubernetes resource and lists out all the ownerReferenceObjects chain. 
 
